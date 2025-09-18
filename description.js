@@ -5,3 +5,4 @@
 // npm i -D json-server   - фейковый сервер для запросов
 // npm i -D concurrently   - модуль для одновременного запуска сервера и фронта (команду пишем в package.json)
 // npm install tailwindcss @tailwindcss/vite
+// npm i @tanstack/react-query-devtools

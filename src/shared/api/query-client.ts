@@ -1,3 +1,16 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from '@tanstack/react-query';
 
-export const queryClient = new QueryClient();  /* (создаем инстанс клиента, подключаем в app) */
+// export const queryClient = new QueryClient();  /* (создаем инстанс клиента, в д.с без опций, подключаем в app) */
+
+export const queryClient = new QueryClient({
+    /* (для примера инстанс с опциями) */
+    defaultOptions: {
+        queries: {
+            // gcTime: 5 * 60 * 1000, /* (время, через которое устаревшие значения в обьекте(кеше) будут удаляться - 5 минут по умолчанию) */
+            staleTime:
+                1 *
+                60 *
+                1000 /* (время устаревания значений в кеше - если по ключу значение устаревшее, при запросе будет выполнен реальный запрос, а не взято значение из кеша, и в случае разницы - перерендер(на продакшене рекомендуется оставить по умолчанию - 0)) */,
+        },
+    },
+});
