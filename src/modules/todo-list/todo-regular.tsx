@@ -1,8 +1,4 @@
-import {
-    keepPreviousData,
-    // useInfiniteQuery,
-    useQuery,
-} from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { todoListApi } from './api';
 import { useState } from 'react';
 
@@ -36,22 +32,7 @@ export function TodoList() {
             enabled: enabled /* (опция для блокировки запроса, для примера ниже реализована кнопка) */,
         });
 
-    // const {
-    //     data: todoItems,
-    //     error,
-    //     status,
-    //     fetchStatus,
-    //     isPlaceholderData,
-    // } = useInfiniteQuery({
-    //     queryKey: ['tasks', 'list', { page }],
-    //     queryFn: (meta) => todoListApi.getTodoList({ page }, meta),
-    //     enabled: enabled,
-    //     initialPageParam: 1,
-    //     getNextPageParam: (result) => result.next,
-    // });
-
-    // if (status === 'pending' || fetchStatus === 'fetching') {
-    //     /* ( === isLoading) */
+    // if (status === 'pending' || fetchStatus === 'fetching') {  /* ( === isLoading) */
     //     return <div>Loading...</div>;
     // }
 
