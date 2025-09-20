@@ -1,10 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { todoListApi } from './api';
-import { useState } from 'react';
+import { useIntersection } from '../../shared/hooks';
 
 export function TodoInf() {
-    const [enabled, setEnabled] = useState(true);
-
     const {
         data: todoItems,
         error,
@@ -23,11 +21,19 @@ export function TodoInf() {
                 } /* (в д.с страницу берем из встроенного обьекта данных) */,
                 meta,
             ) /* (в запрос передаем встроенный мета-обьект, из него в запросе в опциях используем поле signal - автоматически прервет запрос(незавершенный) если пользователь покинет страницу например) */,
-        enabled: enabled,
         initialPageParam: 1 /* (инициализируем страницы - с первой в д.с) */,
         getNextPageParam: (result) =>
             result.next /* (получаем параметры страницы для следующего запроса) */,
-        // getPreviousPageParam: () => {}
+        // getPreviousPageParam: () => {}  /* (если работаем в обратном направлении, получаем параметры для предыдущей страницы) */
+        select: (result) =>
+            result.pages.flatMap(
+                (page) => page.data,
+            ) /* (для подготовки результатов запроса к отрисовке - страницы приходят в виде массивов, делаем из них один массив) */,
+    });
+
+    /* (добавляем реф в конец листа, хук-observer отследит появление его на странице и запустит переданную в него функцию(для подгрузки следующей страницы)) */
+    const cursorRef = useIntersection(() => {
+        fetchNextPage();
     });
 
     // if (isLoading) {
@@ -47,7 +53,7 @@ export function TodoInf() {
                     (isPlaceholderData ? ' opacity-50' : '')
                 }
             >
-                {todoItems?.data.map((todo) => (
+                {todoItems?.map((todo) => (
                     <div
                         className="border border-slate-300 rounded p-3"
                         key={todo.id}
@@ -56,13 +62,9 @@ export function TodoInf() {
                     </div>
                 ))}
             </div>
-            <div className="flex gap-2 mt-5">
-                <button
-                    onClick={() => setEnabled((e) => !e)}
-                    className="p-3 rounded border border-teal-500 cursor-pointer"
-                >
-                    Toggle enabled
-                </button>
+            <div className="flex gap-2 mt-5 min-h-1" ref={cursorRef}>
+                {!hasNextPage && <div>End of todos feed</div>}
+                {isFetchingNextPage && <div>Loading...</div>}
             </div>
         </div>
     );
