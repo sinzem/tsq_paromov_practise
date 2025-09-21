@@ -15,7 +15,16 @@ export function useIntersection(onIntersect: () => void) {
             });
         });
 
+        console.log(el?.getBoundingClientRect().top);
+        console.log(document.documentElement.clientHeight);
         if (el) {
+            if (
+                el.getBoundingClientRect().top <
+                document.documentElement.clientHeight / 2
+            ) {
+                el.style.marginTop = '100vh';
+                setTimeout(() => (el.style.marginTop = '20px'), 50);
+            }
             observer.observe(el);
             unsubscribe.current = () => observer.disconnect();
         } else {

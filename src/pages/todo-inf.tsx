@@ -3,7 +3,7 @@ import { TodoInf } from '../modules/todo-list/todo-infinity';
 
 const TodoInfinity = () => {
     return (
-        <div className="relative mx-auto max-w-[1200px]">
+        <div className="relative mx-auto max-w-[1200px] min-h-[100.1vh]">
             <TodoInf />
             <NavLink
                 end

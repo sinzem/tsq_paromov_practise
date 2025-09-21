@@ -1,40 +1,8 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { todoListApi } from './api';
-import { useIntersection } from '../../shared/hooks';
+import { useTodoInf } from './use-todo-infinity';
 
 export function TodoInf() {
-    const {
-        data: todoItems,
-        error,
-        // isLoading, /* (статус загрузки) */
-        isPlaceholderData,
-        fetchNextPage /* (встроенная функция подгрузит следующую страницу) */,
-        hasNextPage /* (флаг - есть ли следующая страница) */,
-        isFetchingNextPage /* (флаг загрузки следующей страницы) */,
-    } = useInfiniteQuery({
-        /* (специально для бесконечного листа) */
-        queryKey: ['tasks', 'list'],
-        queryFn: (meta) =>
-            todoListApi.getTodoList(
-                {
-                    page: meta.pageParam,
-                } /* (в д.с страницу берем из встроенного обьекта данных) */,
-                meta,
-            ) /* (в запрос передаем встроенный мета-обьект, из него в запросе в опциях используем поле signal - автоматически прервет запрос(незавершенный) если пользователь покинет страницу например) */,
-        initialPageParam: 1 /* (инициализируем страницы - с первой в д.с) */,
-        getNextPageParam: (result) =>
-            result.next /* (получаем параметры страницы для следующего запроса) */,
-        // getPreviousPageParam: () => {}  /* (если работаем в обратном направлении, получаем параметры для предыдущей страницы) */
-        select: (result) =>
-            result.pages.flatMap(
-                (page) => page.data,
-            ) /* (для подготовки результатов запроса к отрисовке - страницы приходят в виде массивов, делаем из них один массив) */,
-    });
-
-    /* (добавляем реф в конец листа, хук-observer отследит появление его на странице и запустит переданную в него функцию(для подгрузки следующей страницы)) */
-    const cursorRef = useIntersection(() => {
-        fetchNextPage();
-    });
+    /* (всю логику получения данных для листа вынесли в отдельный хук) */
+    const { todoItems, error, cursor } = useTodoInf();
 
     // if (isLoading) {
     //     return <div>Loading...</div>;
@@ -47,12 +15,7 @@ export function TodoInf() {
     return (
         <div className="p-5 mx-auto max-w-[1200px] mt-10">
             <h1 className="text-3xl font-bold underline">Todo List</h1>
-            <div
-                className={
-                    'flex flex-col gap-4 mt-5' +
-                    (isPlaceholderData ? ' opacity-50' : '')
-                }
-            >
+            <div className={'flex flex-col gap-4 mt-5'}>
                 {todoItems?.map((todo) => (
                     <div
                         className="border border-slate-300 rounded p-3"
@@ -62,10 +25,7 @@ export function TodoInf() {
                     </div>
                 ))}
             </div>
-            <div className="flex gap-2 mt-5 min-h-1" ref={cursorRef}>
-                {!hasNextPage && <div>End of todos feed</div>}
-                {isFetchingNextPage && <div>Loading...</div>}
-            </div>
+            {cursor}
         </div>
     );
 }
