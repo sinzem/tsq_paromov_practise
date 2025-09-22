@@ -14,6 +14,11 @@ const MainPage = () => {
                         Infinity Todo List
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink end to="/todo_create">
+                        Create Todo
+                    </NavLink>
+                </li>
             </nav>
         </div>
     );

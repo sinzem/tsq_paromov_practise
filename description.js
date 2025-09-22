@@ -6,3 +6,4 @@
 // npm i -D concurrently   - модуль для одновременного запуска сервера и фронта (команду пишем в package.json)
 // npm install tailwindcss @tailwindcss/vite
 // npm i @tanstack/react-query-devtools
+// npm i nanoid  - для генерации id

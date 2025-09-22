@@ -1,9 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { todoListApi } from './api';
-import { useIntersection } from '../../shared/hooks';
+import { todoListApi } from '../api/api';
+import { useIntersection } from './useIntersection';
 
 /* (выносим часть логики - подгрузку страниц, реф и элемент с ним - в хук) */
-export function useTodoInf() {
+export function useTodoInfinity() {
     const {
         data: todoItems,
         error,

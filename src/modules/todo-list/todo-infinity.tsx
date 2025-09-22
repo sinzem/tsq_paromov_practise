@@ -1,8 +1,8 @@
-import { useTodoInf } from './use-todo-infinity';
+import { useTodoInfinity } from '../../shared/hooks';
 
-export function TodoInf() {
+export function TodoInfinity() {
     /* (всю логику получения данных для листа вынесли в отдельный хук) */
-    const { todoItems, error, cursor } = useTodoInf();
+    const { todoItems, error, cursor } = useTodoInfinity();
 
     // if (isLoading) {
     //     return <div>Loading...</div>;

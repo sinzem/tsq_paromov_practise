@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import { TodoInf } from '../modules/todo-list/todo-infinity';
+import { TodoInfinity } from '../modules/todo-list/todo-infinity';
 
-const TodoInfinity = () => {
+const TodoInfinityPage = () => {
     return (
         <div className="relative mx-auto max-w-[1200px] min-h-[100.1vh]">
-            <TodoInf />
+            <TodoInfinity />
             <NavLink
                 end
                 to="/"
@@ -16,4 +16,4 @@ const TodoInfinity = () => {
     );
 };
 
-export default TodoInfinity;
+export default TodoInfinityPage;

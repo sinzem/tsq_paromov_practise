@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import { TodoList } from '../modules/todo-list/todo-regular';
+import { TodoRegular } from '../modules/todo-list/todo-regular';
 
-const TodoRegular = () => {
+const TodoRegularPage = () => {
     return (
         <div className="relative mx-auto max-w-[1200px] min-h-[100.1vh]">
-            <TodoList />
+            <TodoRegular />
             <NavLink
                 end
                 to="/"
@@ -16,4 +16,4 @@ const TodoRegular = () => {
     );
 };
 
-export default TodoRegular;
+export default TodoRegularPage;

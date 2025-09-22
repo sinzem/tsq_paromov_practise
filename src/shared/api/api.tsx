@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
-import { jsonApiInstance } from '../../shared/api/api-instance';
+import { jsonApiInstance } from './api-instance';
 
 // const BASE_URL = 'http://localhost:3000';
 
@@ -17,6 +17,7 @@ export type ITodoDto = {
     id: string;
     text: string;
     done: boolean;
+    userId: string;
 };
 
 export const todoListApi = {
@@ -34,11 +35,13 @@ export const todoListApi = {
     //     }).then((res) => res.json() as Promise<IPaginatedResult<ITodoDto>>);
     // },
 
+    baseKey: 'tasks',
+
     getTodoListQueryOptions: ({ page }: { page: number }) => {
         /* (для оптимизации выносим общую логику из компонента) */
         return queryOptions({
             /* (queryOptions предназначен для получения уже типизированного обьекта на выходе) */
-            queryKey: ['tasks', 'list', { page }],
+            queryKey: [todoListApi.baseKey, 'list', { page }],
             // queryFn: (meta) => todoListApi.getTodoList({ page }, meta),
             queryFn: (meta) =>
                 jsonApiInstance<IPaginatedResult<ITodoDto>>(
@@ -50,11 +53,22 @@ export const todoListApi = {
         });
     },
 
+    getTodoListQueryOptionsNoPagination: () => {
+        /* (будет использовано на странице создания todo, поэтому сохраняем по другому ключу) */
+        return queryOptions({
+            queryKey: [todoListApi.baseKey, 'list', 'create'],
+            queryFn: (meta) =>
+                jsonApiInstance<ITodoDto[]>(`/tasks`, {
+                    signal: meta.signal,
+                }),
+        });
+    },
+
     getTodoListInfinityQueryOptions: () => {
         /* (для оптимизации выносим общую логику из компонента) */
         return infiniteQueryOptions({
             /* (infiniteQueryOptions предназначен для получения уже типизированного обьекта на выходе) */
-            queryKey: ['tasks', 'list'],
+            queryKey: [todoListApi.baseKey, 'list'],
             // queryFn: (meta) =>
             //     todoListApi.getTodoList({ page: meta.pageParam }, meta),
             queryFn: (meta) =>
@@ -67,6 +81,26 @@ export const todoListApi = {
             initialPageParam: 1,
             getNextPageParam: (result) => result.next,
             select: (result) => result.pages.flatMap((page) => page.data),
+        });
+    },
+
+    createTodo: (/* { done, id, text, userId } */ data: ITodoDto) => {
+        return jsonApiInstance<ITodoDto>(`/tasks`, {
+            method: 'POST',
+            json: data,
+        });
+    },
+
+    updateTodo: (id: string, data: Partial<ITodoDto>) => {
+        return jsonApiInstance<ITodoDto>(`/tasks/${id}`, {
+            method: 'PATCH',
+            json: data,
+        });
+    },
+
+    deleteTodo: (id: string) => {
+        return jsonApiInstance(`/tasks/${id}`, {
+            method: 'DELETE',
         });
     },
 };
