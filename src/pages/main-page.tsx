@@ -19,6 +19,11 @@ const MainPage = () => {
                         Create Todo
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink end to="/todo_delete">
+                        Delete Todo
+                    </NavLink>
+                </li>
             </nav>
         </div>
     );

@@ -1,19 +1,13 @@
-import { useTodoCreate } from '../../shared/hooks';
+import { useTodoCreate, useTodoDelete } from '../../shared/hooks';
 import { useTodoRegularForCreate } from '../../shared/hooks';
 
-export function TodoCreate() {
-    const {
-        todoItems,
-        error,
-        isLoading,
-        // refetch /* (встроенная функция, сделает повторный запрос на сервер, можно добавить после успешной мутации для обновления листа, но неудобно, если функция мутации вынесена отдельно) */
-    } = useTodoRegularForCreate();
+export function TodoDelete() {
+    const { todoItems, error, isLoading } = useTodoRegularForCreate();
 
     const createTodo = useTodoCreate();
+    const deleteTodo = useTodoDelete();
 
-    const {
-        handleCreate,
-    } = useTodoCreate(); /* (функцию мутации и добавления Todo вынесли в отдельный хук) */
+    const { handleCreate } = useTodoCreate();
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -44,10 +38,19 @@ export function TodoCreate() {
             <div className={'flex flex-col gap-4 mt-5'}>
                 {todoItems?.map((todo) => (
                     <div
-                        className="border border-slate-300 rounded p-3"
+                        className="border border-slate-300 rounded p-3 flex justify-between"
                         key={todo.id}
                     >
                         {todo.text}
+
+                        <button
+                            // disabled={deleteTodo.getIsPending}
+                            disabled={deleteTodo.getIsPending(todo.id)}
+                            onClick={() => deleteTodo.handleDelete(todo.id)}
+                            className="text-rose-500 font-bold disabled:text-rose-300 cursor-pointer"
+                        >
+                            Delete
+                        </button>
                     </div>
                 ))}
             </div>

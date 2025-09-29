@@ -91,8 +91,8 @@ export const todoListApi = {
         });
     },
 
-    updateTodo: (id: string, data: Partial<ITodoDto>) => {
-        return jsonApiInstance<ITodoDto>(`/tasks/${id}`, {
+    updateTodo: (data: Partial<ITodoDto> & {id: string}) => { /* (в update нужно передать один аргумент, добавляем id к data) */
+        return jsonApiInstance<ITodoDto>(`/tasks/${data.id}`, {
             method: 'PATCH',
             json: data,
         });
